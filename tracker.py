@@ -30,7 +30,7 @@ for k, g in df.groupby(['Market']):
             if prevIndex == None:
                 df.at[i,'BuyTotal'] = round(buyTotal,PRECISION)
             else:
-                df.at[i,'BuyTotal'] = df.at[prevIndex,'BuyTotal'] + buyTotal
+                df.at[i,'BuyTotal'] = df.at[prevIndex,'BuyTotal'] + round(buyTotal,PRECISION
 
             if prevIndex == None:
                 df.at[i,'AmountTotal'] = round(r.Amount,PRECISION)
@@ -64,7 +64,6 @@ for k, g in df.groupby(['Market']):
 df['BTCProfit'] = df['BTCProfit'].apply(lambda x: round(x,PRECISION))
 df['ETHProfit'] = df['ETHProfit'].apply(lambda x: round(x,PRECISION))
 df.set_index('Date', inplace=True)
-
 
 print(df)
 
