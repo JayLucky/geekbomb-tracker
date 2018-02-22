@@ -23,19 +23,19 @@ df['Price'] = df['Price'].apply(lambda x: round(x,PRECISION))
 df['Total'] = df['Total'].apply(lambda x: round(x,PRECISION))
 
 for k, g in df.groupby(['Market']):
-    prevIndex=None
+    p=None
     for i, r in g.iterrows():
         if r.Type == 'BUY':
             buyTotal = round(r.Price,PRECISION) * round(r.Amount,PRECISION)
-            if prevIndex == None:
+            if p is None:
                 df.at[i,'BuyTotal'] = round(buyTotal,PRECISION)
             else:
-                df.at[i,'BuyTotal'] = df.at[prevIndex,'BuyTotal'] + round(buyTotal,PRECISION
+                df.at[i,'BuyTotal'] = df.at[p, 'BuyTotal'] + round(buyTotal, PRECISION)
 
-            if prevIndex == None:
+            if p is None:
                 df.at[i,'AmountTotal'] = round(r.Amount,PRECISION)
             else:
-                df.at[i,'AmountTotal'] = df.at[prevIndex,'AmountTotal'] + round(r.Amount,PRECISION)
+                df.at[i,'AmountTotal'] = df.at[p, 'AmountTotal'] + round(r.Amount, PRECISION)
 #            print(g)
         elif r.Type == 'SELL':
             if k == 'ETHBTC':
@@ -45,8 +45,8 @@ for k, g in df.groupby(['Market']):
                 df.at[i,'ETHProfit'] = round(r.Total,PRECISION)
             elif re.search('BTC$', r.Market):
                 sellTotal = round(r.Price,PRECISION) * round(r.Amount,PRECISION)
-                buyTotal = df.at[prevIndex,'BuyTotal']
-                amountTotal = df.at[prevIndex,'AmountTotal']
+                buyTotal = df.at[p, 'BuyTotal']
+                amountTotal = df.at[p, 'AmountTotal']
                 newAmount = round(amountTotal,PRECISION) - round(r.Amount,PRECISION)
                 if newAmount > 0:
                     df.at[i,'AmountTotal'] = round(newAmount,PRECISION)
@@ -59,7 +59,7 @@ for k, g in df.groupby(['Market']):
 
         else:
             continue
-        prevIndex=i
+        p=i
 
 df['BTCProfit'] = df['BTCProfit'].apply(lambda x: round(x,PRECISION))
 df['ETHProfit'] = df['ETHProfit'].apply(lambda x: round(x,PRECISION))
